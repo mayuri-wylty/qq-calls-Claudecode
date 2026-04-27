@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+
+logs/
+dist/
+build/
+*.spec
+
+NapCatCompat/
+
+config.json
+runtime_status.json
+runtime_stats.json
+
+*.log
+*.tmp

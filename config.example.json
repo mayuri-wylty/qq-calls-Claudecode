@@ -1,0 +1,13 @@
+{
+  "trigger_prefix": "/ai ",
+  "whitelist": [],
+  "claude_timeout": 120,
+  "max_chunk_size": 500,
+  "thinking_msg": "收到，正在处理...",
+  "onebot_api_base": "http://127.0.0.1:3000",
+  "onebot_access_token": "",
+  "bot_host": "127.0.0.1",
+  "bot_port": 18089,
+  "config_host": "127.0.0.1",
+  "config_port": 7070
+}
