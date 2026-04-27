@@ -7,7 +7,6 @@ import socket
 import subprocess
 import sys
 import time
-import webbrowser
 from datetime import datetime
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -75,12 +74,21 @@ Set-Location $napcatDir
 
 
 def run_powershell(script: str, timeout: int = 10) -> subprocess.CompletedProcess[str]:
+    startupinfo = None
+    creationflags = 0
+    if os.name == "nt":
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        startupinfo.wShowWindow = 0
+        creationflags = subprocess.CREATE_NO_WINDOW
     return subprocess.run(
         ["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", script],
         cwd=str(BASE_DIR),
         text=True,
         capture_output=True,
         timeout=timeout,
+        startupinfo=startupinfo,
+        creationflags=creationflags,
     )
 
 
@@ -160,6 +168,9 @@ class ConfigHandler(SimpleHTTPRequestHandler):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, directory=str(WEB_DIR), **kwargs)
+
+    def log_message(self, format: str, *args: Any) -> None:
+        return
 
     def _read_body(self) -> dict[str, Any]:
         length = int(self.headers.get("Content-Length", "0") or 0)
@@ -313,7 +324,6 @@ def main() -> None:
     host = str(config.get("config_host", "127.0.0.1"))
     port = int(config.get("config_port", 7070))
     url = f"http://{host}:{port}"
-    webbrowser.open(url)
     print(f"配置页已启动：{url}")
     server = ThreadingHTTPServer((host, port), ConfigHandler)
     server.serve_forever()

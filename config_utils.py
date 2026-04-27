@@ -1,11 +1,16 @@
 from __future__ import annotations
 
 import json
+import os
+import sys
 from pathlib import Path
 from typing import Any
 
 
-BASE_DIR = Path(__file__).resolve().parent
+if getattr(sys, "frozen", False):
+    BASE_DIR = Path(sys.executable).resolve().parent
+else:
+    BASE_DIR = Path(os.environ.get("A5_ROOT", Path(__file__).resolve().parent)).resolve()
 CONFIG_PATH = BASE_DIR / "config.json"
 STATUS_PATH = BASE_DIR / "runtime_status.json"
 STATS_PATH = BASE_DIR / "runtime_stats.json"
